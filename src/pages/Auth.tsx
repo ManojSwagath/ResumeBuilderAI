@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Sparkles, Github } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Auth() {
@@ -15,7 +16,7 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, signInWithOAuth, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +43,13 @@ export default function Auth() {
       }
     }
     setLoading(false);
+  };
+
+  const handleOAuthSignIn = async (provider: 'google' | 'github') => {
+    const { error } = await signInWithOAuth(provider);
+    if (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
