@@ -87,7 +87,7 @@ export default function Builder() {
       if (data.documentType === "portfolio" || data.documentType === "both") {
         const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + "-ai";
         if (existingPortfolioId) {
-          await supabase.from("portfolios").update({ data: data as any, template: data.portfolioTemplate, title: `${title} - Portfolio`, slug }).eq("id", existingPortfolioId);
+          await supabase.from("portfolios").update({ data: data as any, template: data.portfolioTemplate, title: `${title} - Portfolio`, slug, is_published: true }).eq("id", existingPortfolioId);
           portfolioIdToUse = existingPortfolioId;
         } else {
           const { data: newPortfolio } = await supabase.from("portfolios").insert({ user_id: user.id, data: data as any, template: data.portfolioTemplate, title: `${title} - Portfolio`, slug, is_published: true }).select().single();
