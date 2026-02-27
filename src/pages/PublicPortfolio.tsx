@@ -11,16 +11,30 @@ export default function PublicPortfolio() {
 
   useEffect(() => {
     if (!slug) return;
-    supabase
-      .from("portfolios")
-      .select("*")
-      .eq("slug", slug)
-      .eq("is_published", true)
-      .single()
-      .then(({ data: p }) => {
-        if (p) setData(p.data as unknown as WizardData);
+    const fetchPortfolio = async () => {
+      console.log("Fetching portfolio with slug:", slug);
+      const { data: p, error } = await supabase
+        .from("portfolios")
+        .select("*")
+        .eq("slug", slug)
+        .eq("is_published", true)
+        .single();
+      
+      console.log("Portfolio query result:", { data: p, error });
+      
+      if (error) {
+        console.error("Error fetching portfolio:", error);
         setLoading(false);
-      });
+        return;
+      }
+      
+      if (p) {
+        console.log("Portfolio data loaded successfully");
+        setData(p.data as unknown as WizardData);
+      }
+      setLoading(false);
+    };
+    fetchPortfolio();
   }, [slug]);
 
   if (loading) {
